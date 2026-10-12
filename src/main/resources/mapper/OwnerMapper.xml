@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jou.mr.springboot.mapper.OwnerMapper">
+
+    <resultMap id="BaseResultMap" type="jou.mr.springboot.entity.Owner">
+        <id column="owner_id" property="ownerId"/>
+        <result column="owner_name" property="ownerName"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="id_card" property="idCard"/>
+    </resultMap>
+
+    <insert id="insertOwner" parameterType="jou.mr.springboot.entity.Owner" useGeneratedKeys="true" keyProperty="ownerId">
+        insert into owner (owner_name, gender, phone, id_card)
+        values (#{ownerName}, #{gender}, #{phone}, #{idCard})
+    </insert>
+
+    <update id="updateOwnerById" parameterType="jou.mr.springboot.entity.Owner">
+        update owner
+        <set>
+            <if test="ownerName!=null">owner_name=#{ownerName},</if>
+            <if test="gender!=null">gender=#{gender},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="idCard!=null">id_card=#{idCard}</if>
+        </set>
+        where owner_id=#{ownerId}
+    </update>
+
+    <delete id="deleteOwnerById">
+        delete from owner where owner_id = #{ownerId}
+    </delete>
+
+    <select id="selectOwnerById" resultMap="BaseResultMap">
+        select * from owner where owner_id = #{ownerId}
+    </select>
+
+    <select id="selectOwnerAll" resultMap="BaseResultMap">
+        select * from owner
+        <where>
+            <if test="ownerName!=null">and owner_name like concat('%', #{ownerName}, '%')</if>
+            <if test="phone!=null">and phone=#{phone}</if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jou.mr.springboot.mapper.RepairMapper">
+
+    <resultMap id="BaseResultMap" type="jou.mr.springboot.entity.Repair">
+        <id column="repair_id" property="repairId"/>
+        <result column="house_id" property="houseId"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="content" property="content"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <insert id="insertRepair" parameterType="jou.mr.springboot.entity.Repair" useGeneratedKeys="true"
+            keyProperty="repairId">
+        insert into repair (house_id, owner_id, content, status)
+        values (#{houseId}, #{ownerId}, #{content}, #{status})
+    </insert>
+
+    <update id="updateRepairById" parameterType="jou.mr.springboot.entity.Repair">
+        update repair
+        <set>
+            <if test="houseId!=null">house_id=#{houseId},</if>
+            <if test="ownerId!=null">owner_id=#{ownerId},</if>
+            <if test="content!=null">content=#{content},</if>
+            <if test="status!=null">status=#{status}</if>
+        </set>
+        where repair_id=#{repairId}
+    </update>
+
+    <delete id="deleteRepairById">
+        delete
+        from repair
+        where repair_id = #{repairId}
+    </delete>
+
+    <select id="selectRepairById" resultMap="BaseResultMap">
+        select *
+        from repair
+        where repair_id = #{repairId}
+    </select>
+
+    <select id="selectRepairAll" resultMap="BaseResultMap">
+        select * from repair
+        <where>
+            <if test="houseId!=null">and house_id=#{houseId}</if>
+            <if test="ownerId!=null">and owner_id=#{ownerId}</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+        order by field(status, '待处理', '处理中', '已完成'),repair_id asc
+    </select>
+
+</mapper>

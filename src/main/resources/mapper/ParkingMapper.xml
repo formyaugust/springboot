@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jou.mr.springboot.mapper.ParkingMapper">
+
+    <resultMap id="BaseResultMap" type="jou.mr.springboot.entity.Parking">
+        <id column="parking_id" property="parkingId"/>
+        <result column="parking_no" property="parkingNo"/>
+        <result column="status" property="status"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="car_plate" property="carPlate"/>
+    </resultMap>
+
+    <insert id="insertParking" parameterType="jou.mr.springboot.entity.Parking" useGeneratedKeys="true" keyProperty="parkingId">
+        insert into parking (parking_no, status, owner_id, car_plate)
+        values (#{parkingNo}, #{status}, #{ownerId}, #{carPlate})
+    </insert>
+
+    <update id="updateParkingById" parameterType="jou.mr.springboot.entity.Parking">
+        update parking
+        <set>
+            <if test="parkingNo!=null">parking_no=#{parkingNo},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="ownerId!=null">owner_id=#{ownerId},</if>
+            <if test="carPlate!=null">car_plate=#{carPlate}</if>
+        </set>
+        where parking_id=#{parkingId}
+    </update>
+
+    <delete id="deleteParkingById">
+        delete from parking where parking_id = #{parkingId}
+    </delete>
+
+    <select id="selectParkingById" resultMap="BaseResultMap">
+        select * from parking where parking_id = #{parkingId}
+    </select>
+
+    <select id="selectParkingAll" resultMap="BaseResultMap">
+        select * from parking
+        <where>
+            <if test="parkingNo!=null">and parking_no like concat('%', #{parkingNo}, '%')</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+    </select>
+
+</mapper>

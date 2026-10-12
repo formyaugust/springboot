@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jou.mr.springboot.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="jou.mr.springboot.entity.SysUser">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="real_name" property="realName"/>
+        <result column="phone" property="phone"/>
+    </resultMap>
+
+    <insert id="insertSysUser" parameterType="jou.mr.springboot.entity.SysUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into sys_user (username, password, real_name, phone)
+        values (#{username}, #{password}, #{realName}, #{phone})
+    </insert>
+
+    <update id="updateSysUserById" parameterType="jou.mr.springboot.entity.SysUser">
+        update sys_user
+        <set>
+            <if test="username!=null">username=#{username},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="realName!=null">real_name=#{realName},</if>
+            <if test="phone!=null">phone=#{phone}</if>
+        </set>
+        where user_id=#{userId}
+    </update>
+
+    <delete id="deleteSysUserById">
+        delete from sys_user where user_id = #{userId}
+    </delete>
+
+    <select id="checkLogin" resultMap="BaseResultMap">
+        select *
+        from sys_user
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <select id="selectSysUserAll" resultMap="BaseResultMap">
+        select * from sys_user
+        <where>
+            <if test="username!=null">and username like concat('%', #{username}, '%')</if>
+            <if test="realName!=null">and real_name like concat('%', #{realName}, '%')</if>
+        </where>
+    </select>
+
+</mapper>

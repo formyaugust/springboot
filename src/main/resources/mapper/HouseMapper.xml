@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jou.mr.springboot.mapper.HouseMapper">
+
+  <resultMap id="BaseResultMap" type="jou.mr.springboot.entity.House">
+    <id column="house_id" property="houseId"/>
+    <result column="building_no" property="buildingNo"/>
+    <result column="unit_no" property="unitNo"/>
+    <result column="room_no" property="roomNo"/>
+    <result column="room_status" property="roomStatus"/>
+    <result column="owner_id" property="ownerId"/>
+  </resultMap>
+
+  <insert id="insertHouse" parameterType="jou.mr.springboot.entity.House" useGeneratedKeys="true" keyProperty="houseId">
+    insert into house (building_no, unit_no, room_no, room_status, owner_id)
+    values (#{buildingNo}, #{unitNo}, #{roomNo}, #{roomStatus}, #{ownerId})
+  </insert>
+
+  <update id="updateHouseById" parameterType="jou.mr.springboot.entity.House">
+    update house
+    <set>
+      <if test="buildingNo!=null">building_no=#{buildingNo},</if>
+      <if test="unitNo!=null">unit_no=#{unitNo},</if>
+      <if test="roomNo!=null">room_no=#{roomNo},</if>
+      <if test="roomStatus!=null">room_status=#{roomStatus},</if>
+      <if test="ownerId!=null">owner_id=#{ownerId}</if>
+    </set>
+    where house_id=#{houseId}
+  </update>
+
+  <delete id="deleteHouseById">
+    delete from house where house_id = #{houseId}
+  </delete>
+
+  <select id="selectHouseById" resultMap="BaseResultMap">
+    select * from house where house_id = #{houseId}
+  </select>
+
+  <select id="selectHouseAll" resultMap="BaseResultMap">
+    select * from house
+    <where>
+      <if test="buildingNo!=null">and building_no=#{buildingNo}</if>
+      <if test="unitNo!=null">and unit_no=#{unitNo}</if>
+      <if test="roomNo!=null">and room_no=#{roomNo}</if>
+      <if test="roomStatus!=null">and room_status=#{roomStatus}</if>
+      <if test="ownerId!=null">and owner_id=#{ownerId}</if>
+    </where>
+  </select>
+
+</mapper>

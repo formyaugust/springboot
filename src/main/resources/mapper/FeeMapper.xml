@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jou.mr.springboot.mapper.FeeMapper">
+
+    <resultMap id="BaseResultMap" type="jou.mr.springboot.entity.Fee">
+        <id column="fee_id" property="feeId"/>
+        <result column="house_id" property="houseId"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="fee_type" property="feeType"/>
+        <result column="amount" property="amount"/>
+        <result column="bill_month" property="billMonth"/>
+        <result column="pay_status" property="payStatus"/>
+    </resultMap>
+
+    <insert id="insertFee" parameterType="jou.mr.springboot.entity.Fee" useGeneratedKeys="true" keyProperty="feeId">
+        insert into fee (house_id, owner_id, fee_type, amount, bill_month, pay_status)
+        values (#{houseId}, #{ownerId}, #{feeType}, #{amount}, #{billMonth}, #{payStatus})
+    </insert>
+
+    <update id="updateFeeById" parameterType="jou.mr.springboot.entity.Fee">
+        update fee
+        <set>
+            <if test="houseId!=null">house_id=#{houseId},</if>
+            <if test="ownerId!=null">owner_id=#{ownerId},</if>
+            <if test="feeType!=null">fee_type=#{feeType},</if>
+            <if test="amount!=null">amount=#{amount},</if>
+            <if test="billMonth!=null">bill_month=#{billMonth},</if>
+            <if test="payStatus!=null">pay_status=#{payStatus}</if>
+        </set>
+        where fee_id=#{feeId}
+    </update>
+
+    <delete id="deleteFeeById">
+        delete from fee where fee_id = #{feeId}
+    </delete>
+
+    <select id="selectFeeById" resultMap="BaseResultMap">
+        select * from fee where fee_id = #{feeId}
+    </select>
+
+    <select id="selectFeeAll" resultMap="BaseResultMap">
+        select * from fee
+        <where>
+            <if test="houseId!=null">and house_id=#{houseId}</if>
+            <if test="ownerId!=null">and owner_id=#{ownerId}</if>
+            <if test="feeType!=null">and fee_type=#{feeType}</if>
+            <if test="billMonth!=null">and bill_month=#{billMonth}</if>
+            <if test="payStatus!=null">and pay_status=#{payStatus}</if>
+        </where>
+        order by pay_status desc, bill_month desc
+    </select>
+
+</mapper>
